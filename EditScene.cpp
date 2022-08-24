@@ -1,4 +1,5 @@
 #include "EditScene.h"
+#include "Stage.h"
 
 //コンストラクタ
 EditScene::EditScene(GameObject* parent)
@@ -9,6 +10,7 @@ EditScene::EditScene(GameObject* parent)
 //初期化
 void EditScene::Initialize()
 {
+	Instantiate<Stage>(this);
 }
 
 //更新
