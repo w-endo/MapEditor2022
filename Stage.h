@@ -4,7 +4,8 @@
 //◆◆◆を管理するクラス
 class Stage : public GameObject
 {
-    int hModel_;
+    int hModel_[5];
+    int table_[15][15];
 public:
     //コンストラクタ
     Stage(GameObject* parent);
