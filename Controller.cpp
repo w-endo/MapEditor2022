@@ -35,32 +35,57 @@ void Controller::Update()
         transform_.rotate_.y += 1.0f;
     }
 
+
+    if (Input::IsKey(DIK_UP))
+    {
+        transform_.rotate_.x -= 1.0f;
+    }
+
+
+    if (Input::IsKey(DIK_DOWN))
+    {
+        transform_.rotate_.x += 1.0f;
+    }
+
     //transform_.rotate_.yの値に合わせてＹ軸回転させる行列
-    XMMATRIX mRotate = XMMatrixRotationY(XMConvertToRadians(transform_.rotate_.y));
+    XMMATRIX mRotateY = XMMatrixRotationY(XMConvertToRadians(transform_.rotate_.y));
+    XMMATRIX mRotateX = XMMatrixRotationX(XMConvertToRadians(transform_.rotate_.x));
 
     //現在位置をベクトルにしておく
     XMVECTOR vPos = XMLoadFloat3(&transform_.position_);
 
     //移動ベクトル
-    XMFLOAT3 move = { 0, 0, 0.1f };                //奥向きのXMFLOAT3構造体を用意し
-    XMVECTOR vMove = XMLoadFloat3(&move);               //それをベクトルにする
-    vMove = XMVector3TransformCoord(vMove, mRotate);    //戦車の向きに合わせて回転
-
+    XMFLOAT3 front = { 0, 0, 0.1f };                //奥向きのXMFLOAT3構造体を用意し
+    XMFLOAT3 right = { 0.1f, 0, 0 };
+    XMVECTOR vMoveFront = XMLoadFloat3(&front);               //それをベクトルにする
+    XMVECTOR vMoveRight = XMLoadFloat3(&right);               //それをベクトルにする
+    vMoveFront = XMVector3TransformCoord(vMoveFront, mRotateY);    //戦車の向きに合わせて回転
+    vMoveRight = XMVector3TransformCoord(vMoveRight, mRotateY);    //戦車の向きに合わせて回転
 
     if (Input::IsKey(DIK_W))
     {
-        vPos += vMove;
+        vPos += vMoveFront;
         XMStoreFloat3(&transform_.position_, vPos);
     }
     if (Input::IsKey(DIK_S))
     {
-        vPos -= vMove;
+        vPos -= vMoveFront;
+        XMStoreFloat3(&transform_.position_, vPos);
+    }
+    if (Input::IsKey(DIK_D))
+    {
+        vPos += vMoveRight;
+        XMStoreFloat3(&transform_.position_, vPos);
+    }
+    if (Input::IsKey(DIK_A))
+    {
+        vPos -= vMoveRight;
         XMStoreFloat3(&transform_.position_, vPos);
     }
     
     //カメラ
     XMVECTOR vCam = XMVectorSet(0, 10, -10, 0);
-    vCam = XMVector3TransformCoord(vCam, mRotate);
+    vCam = XMVector3TransformCoord(vCam, mRotateX * mRotateY);
     XMFLOAT3 camPos;
     XMStoreFloat3(&camPos, vPos + vCam);
     Camera::SetPosition(XMLoadFloat3(&camPos));
