@@ -35,10 +35,13 @@ void Stage::Initialize()
     }
 
 
-    table_[3][4] = 1;
-    table_[13][8] = 2;
-    table_[5][0] = 3;
-    table_[7][7] = 4;
+    table_[3][4].type = 1;
+    table_[13][8].type = 2;
+    table_[5][0].type = 3;
+    table_[7][7].type = 4;
+
+    table_[7][7].height = 2;
+    table_[1][1].height = 5;
 }
 
 //çXêV
@@ -53,13 +56,17 @@ void Stage::Draw()
     {
         for (int z = 0; z < 15; z++)
         {
-            int type = table_[x][z];
+            for (int y = 0; y < table_[x][z].height+1; y++)
+            {
+                int type = table_[x][z].type;
 
-            Transform trans;
-            trans.position_.x = x;
-            trans.position_.z = z;
-            Model::SetTransform(hModel_[type], trans);
-            Model::Draw(hModel_[type]);
+                Transform trans;
+                trans.position_.x = x;
+                trans.position_.y = y;
+                trans.position_.z = z;
+                Model::SetTransform(hModel_[type], trans);
+                Model::Draw(hModel_[type]);
+            }
         }
     }
 }
