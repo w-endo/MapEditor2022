@@ -8,6 +8,7 @@
 #include "Engine/RootJob.h"
 #include "Engine/Model.h"
 
+#include "Engine/Math.h"
 
 #pragma comment(lib, "winmm.lib")
 
@@ -26,6 +27,13 @@ RootJob* pRootJob;
 //エントリーポイント
 int APIENTRY WinMain(HINSTANCE hInstance, HINSTANCE hPrevInst, LPSTR lpCmdLine, int nCmdShow)
 {
+	bool a = Math::Intersect(XMFLOAT3(1, 5, 1), XMFLOAT3(0, -1, 0),
+		XMFLOAT3(0, 0, 0), XMFLOAT3(0, 0, 3), XMFLOAT3(3, 0, 0));
+
+	bool b = Math::Intersect(XMFLOAT3(5, 5, 1), XMFLOAT3(0, -1, 0),
+		XMFLOAT3(0, 0, 0), XMFLOAT3(0, 0, 3), XMFLOAT3(3, 0, 0));
+
+
 	//ウィンドウクラス（設計図）を作成
 	WNDCLASSEX wc;
 	wc.cbSize = sizeof(WNDCLASSEX);             //この構造体のサイズ
