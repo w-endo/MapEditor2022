@@ -36,6 +36,18 @@ class Fbx
 		XMVECTOR uv;
 		XMVECTOR normal;
 	};
+	VERTEX* pVertices_;
+
+
+	struct RayCastData
+	{
+		XMFLOAT4 start;
+		XMFLOAT4 dir;
+		BOOL hit;
+	};
+
+	int** ppIndex_;
+
 	int vertexCount_;	//頂点数
 	int polygonCount_;	//ポリゴン数
 	int materialCount_;	//マテリアルの個数
@@ -53,6 +65,8 @@ public:
 	HRESULT Load(std::string fileName);
 	void    Draw(Transform& transform);
 	void    Release();
+
+	void RayCast(RayCastData& rayData);
 
 private:
 	void InitVertex(fbxsdk::FbxMesh* pMesh);
