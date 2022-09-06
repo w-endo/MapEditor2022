@@ -8,9 +8,6 @@
 #include "Engine/RootJob.h"
 #include "Engine/Model.h"
 
-#include "Engine/Math.h"
-#include "Engine/Fbx.h"
-
 
 #pragma comment(lib, "winmm.lib")
 
@@ -80,14 +77,6 @@ int APIENTRY WinMain(HINSTANCE hInstance, HINSTANCE hPrevInst, LPSTR lpCmdLine, 
 	{
 		PostQuitMessage(0);
 	}
-
-	Fbx* pFbx = new Fbx;
-	pFbx->Load("Assets/BoxBrick.fbx");
-	RayCastData data;
-	data.start = XMFLOAT3(0, 0, -5);
-	data.dir = XMFLOAT3(1, 0, 1);
-	pFbx->RayCast(data);
-
 
 
 	Input::Initialize(hWnd);

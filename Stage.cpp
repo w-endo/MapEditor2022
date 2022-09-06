@@ -1,5 +1,6 @@
 #include "Stage.h"
 #include "Engine/Model.h"
+#include "Engine/Input.h"
 #include <string>
 
 //コンストラクタ
@@ -47,6 +48,39 @@ void Stage::Initialize()
 //更新
 void Stage::Update()
 {
+    //ビューポート行列
+    float w = (float)Direct3D::scrWidth / 2.0f;
+    float h = (float)Direct3D::scrHeight / 2.0f;
+    XMMATRIX vp = {
+        w, 0, 0, 0,
+        0,-h, 0, 0,
+        0, 0, 1, 0,
+        w, h, 0, 1
+    };
+
+    //各行列の逆行列
+    XMMATRIX invVP = XMMatrixInverse(nullptr, vp);
+    //XMMATRIX invPrj =
+    //XMMATRIX invView =
+
+    //マウス位置（手前）
+    XMFLOAT3 mousePosFront = Input::GetMousePosition();
+    mousePosFront.z = 0.0f;
+
+    //マウス位置（奥）
+    XMFLOAT3 mousePosBack = Input::GetMousePosition();
+    mousePosBack.z = 1.0f;
+
+    //①　mousePosFrontをベクトルに変換
+    //②　①にinvVP、invPrj、invViewをかける
+
+    //③　mousePosBackをベクトルに変換
+    //④　③にinvVP、invPrj、invViewをかける
+
+    //⑤　②から④に向かってレイをうつ（とりあえずモデル番号はhModel_[0]）
+
+    //⑥　レイが当たったらブレークポイントで止める
+
 }
 
 //描画
