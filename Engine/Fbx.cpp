@@ -317,6 +317,10 @@ void Fbx::Release()
 
 void Fbx::RayCast(RayCastData& rayData)
 {
+	XMVECTOR vNormal = XMLoadFloat3(&rayData.dir);
+	vNormal = XMVector3Normalize(vNormal);
+	XMStoreFloat3(&rayData.dir, vNormal);
+
 	for (int material = 0; material < materialCount_; material++)
 	{
 		for (int poly = 0; poly < indexCount_[material]/3; poly++)
