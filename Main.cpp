@@ -9,6 +9,8 @@
 #include "Engine/Model.h"
 
 #include "Engine/Math.h"
+#include "Engine/Fbx.h"
+
 
 #pragma comment(lib, "winmm.lib")
 
@@ -27,12 +29,6 @@ RootJob* pRootJob;
 //エントリーポイント
 int APIENTRY WinMain(HINSTANCE hInstance, HINSTANCE hPrevInst, LPSTR lpCmdLine, int nCmdShow)
 {
-	bool a = Math::Intersect(XMFLOAT3(1, 5, 1), XMFLOAT3(0, -1, 0),
-		XMFLOAT3(0, 0, 0), XMFLOAT3(0, 0, 3), XMFLOAT3(3, 0, 0));
-
-	bool b = Math::Intersect(XMFLOAT3(5, 5, 1), XMFLOAT3(0, -1, 0),
-		XMFLOAT3(0, 0, 0), XMFLOAT3(0, 0, 3), XMFLOAT3(3, 0, 0));
-
 
 	//ウィンドウクラス（設計図）を作成
 	WNDCLASSEX wc;
@@ -84,6 +80,15 @@ int APIENTRY WinMain(HINSTANCE hInstance, HINSTANCE hPrevInst, LPSTR lpCmdLine, 
 	{
 		PostQuitMessage(0);
 	}
+
+	Fbx* pFbx = new Fbx;
+	pFbx->Load("Assets/BoxBrick.fbx");
+	RayCastData data;
+	data.start = XMFLOAT3(0, 0, -5);
+	data.dir = XMFLOAT3(1, 0, 1);
+	pFbx->RayCast(data);
+
+
 
 	Input::Initialize(hWnd);
 

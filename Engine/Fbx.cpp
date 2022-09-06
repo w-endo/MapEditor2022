@@ -2,6 +2,7 @@
 #include "Direct3D.h"
 #include "Camera.h"
 #include "Texture.h"
+#include "Math.h"
 
 Fbx::Fbx() :
 	vertexCount_(0), polygonCount_(0),materialCount_(0),
@@ -125,11 +126,13 @@ void Fbx::InitIndex(fbxsdk::FbxMesh* pMesh)
 	pIndexBuffer_ = new ID3D11Buffer * [materialCount_];
 	indexCount_ = new int[materialCount_];
 
+
 	ppIndex_ = new int*[materialCount_];
 
 	for (int i = 0; i < materialCount_; i++)
 	{
 		ppIndex_[i] = new int[polygonCount_ * 3];
+
 
 		int count = 0;
 
@@ -197,6 +200,7 @@ void Fbx::IntConstantBuffer()
 void Fbx::InitMaterial(fbxsdk::FbxNode* pNode)
 {
 	pMaterialList_ = new MATERIAL[materialCount_];
+
 
 
 	for (int i = 0; i < materialCount_; i++)
@@ -315,13 +319,16 @@ void Fbx::RayCast(RayCastData& rayData)
 {
 	for (int material = 0; material < materialCount_; material++)
 	{
-		for (int poly = 0; poly < œœœ; poly++)
+		for (int poly = 0; poly < indexCount_[material]/3; poly++)
 		{
-			XMFLOAT3 v0 = œœœœœœœœœ;
-			XMFLOAT3 v1 = œœœœœœœœœ;
-			XMFLOAT3 v2 = œœœœœœœœœ;
+			XMFLOAT3 v0;
+			XMFLOAT3 v1;
+			XMFLOAT3 v2;
+			XMStoreFloat3(&v0, pVertices_[ppIndex_[material][poly * 3 + 0]].position);
+			XMStoreFloat3(&v1, pVertices_[ppIndex_[material][poly * 3 + 1]].position);
+			XMStoreFloat3(&v2, pVertices_[ppIndex_[material][poly * 3 + 2]].position);
 
-			rayData.hit = Math::Intesect(œœœœœœœœœ);
+			rayData.hit = Math::Intersect(rayData.start, rayData.dir, v0, v1, v2);
 
 			if (rayData.hit)
 			{

@@ -12,6 +12,12 @@
 
 class Texture;
 
+struct RayCastData
+{
+	XMFLOAT3 start;
+	XMFLOAT3 dir;
+	BOOL hit;
+};
 
 class Fbx
 {
@@ -39,12 +45,7 @@ class Fbx
 	VERTEX* pVertices_;
 
 
-	struct RayCastData
-	{
-		XMFLOAT4 start;
-		XMFLOAT4 dir;
-		BOOL hit;
-	};
+
 
 	int** ppIndex_;
 
