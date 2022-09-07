@@ -1,6 +1,8 @@
 #include "Stage.h"
 #include "Engine/Model.h"
 #include "Engine/Input.h"
+#include "Engine/Camera.h"
+#include "Engine/Fbx.h"
 #include <string>
 
 //コンストラクタ
@@ -48,39 +50,74 @@ void Stage::Initialize()
 //更新
 void Stage::Update()
 {
-    //ビューポート行列
-    float w = (float)Direct3D::scrWidth / 2.0f;
-    float h = (float)Direct3D::scrHeight / 2.0f;
-    XMMATRIX vp = {
-        w, 0, 0, 0,
-        0,-h, 0, 0,
-        0, 0, 1, 0,
-        w, h, 0, 1
-    };
+    if (Input::IsMouseButtonDown(0))
+    {
+        //ビューポート行列
+        float w = (float)Direct3D::scrWidth / 2.0f;
+        float h = (float)Direct3D::scrHeight / 2.0f;
+        XMMATRIX vp = {
+            w, 0, 0, 0,
+            0,-h, 0, 0,
+            0, 0, 1, 0,
+            w, h, 0, 1
+        };
 
-    //各行列の逆行列
-    XMMATRIX invVP = XMMatrixInverse(nullptr, vp);
-    //XMMATRIX invPrj =
-    //XMMATRIX invView =
+        //各行列の逆行列
+        XMMATRIX invVP = XMMatrixInverse(nullptr, vp);
+        XMMATRIX invPrj = XMMatrixInverse(nullptr, Camera::GetProjectionMatrix());
+        XMMATRIX invView = XMMatrixInverse(nullptr, Camera::GetViewMatrix());
 
-    //マウス位置（手前）
-    XMFLOAT3 mousePosFront = Input::GetMousePosition();
-    mousePosFront.z = 0.0f;
+        //マウス位置（手前）
+        XMFLOAT3 mousePosFront = Input::GetMousePosition();
+        mousePosFront.z = 0.0f;
 
-    //マウス位置（奥）
-    XMFLOAT3 mousePosBack = Input::GetMousePosition();
-    mousePosBack.z = 1.0f;
+        //マウス位置（奥）
+        XMFLOAT3 mousePosBack = Input::GetMousePosition();
+        mousePosBack.z = 1.0f;
 
-    //①　mousePosFrontをベクトルに変換
-    //②　①にinvVP、invPrj、invViewをかける
+        //①　mousePosFrontをベクトルに変換
+        XMVECTOR vMouseFront = XMLoadFloat3(&mousePosFront);
 
-    //③　mousePosBackをベクトルに変換
-    //④　③にinvVP、invPrj、invViewをかける
+        //②　①にinvVP、invPrj、invViewをかける
+        vMouseFront = XMVector3TransformCoord(vMouseFront, invVP * invPrj * invView);
 
-    //⑤　②から④に向かってレイをうつ（とりあえずモデル番号はhModel_[0]）
+        //③　mousePosBackをベクトルに変換
+        XMVECTOR vMouseBack = XMLoadFloat3(&mousePosBack);
 
-    //⑥　レイが当たったらブレークポイントで止める
+        //④　③にinvVP、invPrj、invViewをかける
+        vMouseBack = XMVector3TransformCoord(vMouseBack, invVP * invPrj * invView);
 
+
+        for (int x = 0; x < 15; x++)
+        {
+            for (int z = 0; z < 15; z++)
+            {
+                for (int y = 0; y < table_[x][z].height + 1; y++)
+                {
+                    //⑤　②から④に向かってレイをうつ（とりあえずモデル番号はhModel_[0]）
+                    RayCastData data;
+                    XMStoreFloat3(&data.start, vMouseFront);
+                    XMStoreFloat3(&data.dir, vMouseBack - vMouseFront);
+
+                    Transform trans;
+                    trans.position_.x = x;
+                    trans.position_.y = y;
+                    trans.position_.z = z;
+                    Model::SetTransform(hModel_[0], trans);
+
+                    Model::RayCast(hModel_[0], data);
+
+
+                    //⑥　レイが当たったらブレークポイントで止める
+                    if (data.hit)
+                    {
+                        table_[x][z].height++;
+                        break;
+                    }
+                }
+            }
+        }
+    }
 }
 
 //描画

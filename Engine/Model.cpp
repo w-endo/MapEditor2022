@@ -1,6 +1,5 @@
 #include <vector>
 #include "Model.h"
-#include "Fbx.h"
 #include "Direct3D.h"
 
 namespace Model
@@ -79,5 +78,24 @@ void Model::Release()
 
 void Model::RayCast(int hModel, RayCastData& rayData)
 {
+	//‡@ƒ[ƒ‹ƒhs—ñ‚Ì‹ts—ñ
+	models[hModel]->transform.Calclation();
+	XMMATRIX matInv = XMMatrixInverse(nullptr, models[hModel]->transform.GetWorldMatrix());
+
+	//‡AƒŒƒC‚Ì’Ê‰ß“_‚ð‹‚ß‚é
+	XMVECTOR pass = { rayData.start.x + rayData.dir.x, rayData.start.y + rayData.dir.y, rayData.start.z + rayData.dir.z };
+
+	//‡BrayData.start‚É‡@‚ð‚©‚¯‚é
+	XMVECTOR vStart = XMLoadFloat3(&rayData.start);
+	vStart = XMVector3TransformCoord(vStart, matInv);
+	XMStoreFloat3(&rayData.start, vStart);
+
+	//‡C’Ê‰ß“_i‡Aj‚É‡@‚ð‚©‚¯‚é
+	pass = XMVector3TransformCoord(pass, matInv);
+
+	//‡DrayData.dir‚ð‡B‚©‚ç‡C‚ÉŒü‚©‚¤ƒxƒNƒgƒ‹‚É‚·‚é
+	pass = pass - vStart;
+	XMStoreFloat3(&rayData.dir, pass);
+
 	models[hModel]->pFbx->RayCast(rayData);
 }

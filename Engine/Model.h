@@ -1,6 +1,6 @@
 #include <string>
 #include "Transform.h"
-
+#include "Fbx.h"
 
 namespace Model
 {

@@ -22,12 +22,15 @@ namespace Input
 	void Release();
 	bool IsKeyDown(int keyCode);//キーを今押したか調べる（押しっぱなしは無効）
 	bool IsKeyUp(int keyCode);//キーを今離したか調べる
+
 	//マウス
 	bool IsMouseButton(int buttonCode);//マウスのボタンが押されているか調べる //引数：buttonCode 調べたいボタンの番号
 	bool IsMouseButtonDown(int buttonCode);//マウスのボタンを今押したか調べる（押しっぱなしは無効）
 	bool IsMouseButtonUp(int buttonCode);	//マウスのボタンを今離したか調べる
 	XMFLOAT3 GetMousePosition();//マウスカーソルの位置を取得
 	XMFLOAT3 GetMouseMove();//そのフレームでのマウスの移動量を取得
+	void SetMousePosition(int x, int y);
+
 	//コントローラー
 	bool IsPadButton(int buttonCode, int padID = 0);//コントローラーのボタンが押されているか調べる
 	bool IsPadButtonDown(int buttonCode, int padID = 0);//コントローラーのボタンを今押したか調べる
