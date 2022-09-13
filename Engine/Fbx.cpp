@@ -332,7 +332,9 @@ void Fbx::RayCast(RayCastData& rayData)
 			XMStoreFloat3(&v1, pVertices_[ppIndex_[material][poly * 3 + 1]].position);
 			XMStoreFloat3(&v2, pVertices_[ppIndex_[material][poly * 3 + 2]].position);
 
-			rayData.hit = Math::Intersect(rayData.start, rayData.dir, v0, v1, v2);
+
+			rayData.hit = Math::Intersect(rayData.start, rayData.dir, v0, v1, v2, &rayData.dist);
+
 
 			if (rayData.hit)
 			{

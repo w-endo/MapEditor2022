@@ -87,6 +87,8 @@ void Stage::Update()
         //④　③にinvVP、invPrj、invViewをかける
         vMouseBack = XMVector3TransformCoord(vMouseBack, invVP * invPrj * invView);
 
+        int bufX = -1, bufZ;
+        float minDistance = 9999999;
 
         for (int x = 0; x < 15; x++)
         {
@@ -106,17 +108,31 @@ void Stage::Update()
                     Model::SetTransform(hModel_[0], trans);
 
                     Model::RayCast(hModel_[0], data);
-
+                    
 
                     //⑥　レイが当たったらブレークポイントで止める
                     if (data.hit)
                     {
-                        table_[x][z].height++;
-                        break;
+                        //table_[x][z].height++;
+                        //break;
+
+                        if (minDistance > data.dist)
+                        {
+                            minDistance = data.dist;
+                            bufX = x;
+                            bufZ = z;
+                        }
                     }
                 }
             }
         }
+        if (bufX >= 0)
+        {
+            table_[bufX][bufZ].height++;
+        }
+
+
+
     }
 }
 
