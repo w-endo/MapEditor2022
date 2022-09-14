@@ -3,6 +3,7 @@
 #include "Engine/Input.h"
 #include "Engine/Camera.h"
 #include "Engine/Fbx.h"
+#include "resource.h"
 #include <string>
 
 //コンストラクタ
@@ -161,4 +162,18 @@ void Stage::Draw()
 //開放
 void Stage::Release()
 {
+}
+
+
+BOOL Stage::DialogProc(HWND hDlg, UINT msg, WPARAM wp, LPARAM lp)
+{
+    switch (msg)
+    {
+    case WM_INITDIALOG:
+        SendMessage(GetDlgItem(hDlg, IDC_RADIO_UP), BM_SETCHECK, BST_CHECKED, 0);
+        return TRUE;
+
+
+    }
+    return FALSE;
 }
