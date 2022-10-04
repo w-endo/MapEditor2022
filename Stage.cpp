@@ -8,7 +8,8 @@
 
 //コンストラクタ
 Stage::Stage(GameObject* parent)
-    :GameObject(parent, "Stage")
+    :GameObject(parent, "Stage"),
+    mode_(0), select_(0)
 {
     ZeroMemory(table_, sizeof(table_));
 
@@ -129,7 +130,22 @@ void Stage::Update()
         }
         if (bufX >= 0)
         {
-            table_[bufX][bufZ].height++;
+            switch (mode_)
+            {
+            case 0:
+                table_[bufX][bufZ].height++;
+                break;
+            case 1:
+                if (table_[bufX][bufZ].height > 0)
+                {
+                    table_[bufX][bufZ].height--;
+                }
+                break;
+            case 2:
+                table_[bufX][bufZ].type = select_;
+                break;
+            }
+            
         }
 
 
@@ -179,6 +195,26 @@ BOOL Stage::DialogProc(HWND hDlg, UINT msg, WPARAM wp, LPARAM lp)
         SendMessage(GetDlgItem(hDlg, IDC_COMBO_TYPE), CB_SETCURSEL, 0, 0);
         return TRUE;
 
+    case WM_COMMAND:
+        switch (LOWORD(wp))
+        {
+        case IDC_RADIO_UP:
+            mode_ = 0;
+            return TRUE;
+
+        case IDC_RADIO_DOWN:
+            mode_ = 1;
+            return TRUE;
+
+        case IDC_RADIO_CHANGE:
+            mode_ = 2;
+            return TRUE;
+
+        case IDC_COMBO_TYPE:
+            select_ = (int)SendMessage(GetDlgItem(hDlg, IDC_COMBO_TYPE), CB_GETCURSEL, 0, 0);
+            return TRUE;
+        }
+        return FALSE;
 
     }
     return FALSE;

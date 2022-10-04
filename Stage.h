@@ -12,6 +12,9 @@ class Stage : public GameObject
         int height;
     } table_[15][15];
 
+    int mode_;
+    int select_;
+
 
 
 public:
