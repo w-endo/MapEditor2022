@@ -13,9 +13,9 @@
 #pragma comment(lib, "winmm.lib")
 
 //定数宣言
-LPCWSTR WIN_CLASS_NAME =	L"SampleGame";  //ウィンドウクラス名
-const int WINDOW_WIDTH =	800;			//ウィンドウの幅
-const int WINDOW_HEIGHT =	600;			//ウィンドウの高さ
+LPCWSTR WIN_CLASS_NAME = L"SampleGame";  //ウィンドウクラス名
+const int WINDOW_WIDTH = 800;			//ウィンドウの幅
+const int WINDOW_HEIGHT = 600;			//ウィンドウの高さ
 
 //プロトタイプ宣言
 LRESULT CALLBACK WndProc(HWND hWnd, UINT msg, WPARAM wParam, LPARAM lParam);
@@ -39,7 +39,7 @@ int APIENTRY WinMain(HINSTANCE hInstance, HINSTANCE hPrevInst, LPSTR lpCmdLine, 
 	wc.hIcon = LoadIcon(NULL, IDI_APPLICATION); //アイコン
 	wc.hIconSm = LoadIcon(NULL, IDI_WINLOGO);   //小さいアイコン
 	wc.hCursor = LoadCursor(NULL, IDC_ARROW);   //マウスカーソル
-	wc.lpszMenuName = NULL;                     //メニュー（なし）
+	wc.lpszMenuName = MAKEINTRESOURCE(IDR_MENU1);  //メニュー
 	wc.cbClsExtra = 0;
 	wc.cbWndExtra = 0;
 	wc.hbrBackground = (HBRUSH)GetStockObject(WHITE_BRUSH); //背景（白）
@@ -47,7 +47,7 @@ int APIENTRY WinMain(HINSTANCE hInstance, HINSTANCE hPrevInst, LPSTR lpCmdLine, 
 
 	//ウィンドウサイズの計算
 	RECT winRect = { 0, 0, WINDOW_WIDTH, WINDOW_HEIGHT };
-	AdjustWindowRect(&winRect, WS_OVERLAPPEDWINDOW, FALSE);
+	AdjustWindowRect(&winRect, WS_OVERLAPPEDWINDOW, TRUE);
 	int winW = winRect.right - winRect.left;     //ウィンドウ幅
 	int winH = winRect.bottom - winRect.top;     //ウィンドウ高さ
 
@@ -163,7 +163,7 @@ int APIENTRY WinMain(HINSTANCE hInstance, HINSTANCE hPrevInst, LPSTR lpCmdLine, 
 	}
 
 	Model::Release();
-	
+
 	pRootJob->ReleaseSub();
 	SAFE_DELETE(pRootJob);
 
@@ -176,6 +176,7 @@ int APIENTRY WinMain(HINSTANCE hInstance, HINSTANCE hPrevInst, LPSTR lpCmdLine, 
 //ウィンドウプロシージャ（何かあった時によばれる関数）
 LRESULT CALLBACK WndProc(HWND hWnd, UINT msg, WPARAM wParam, LPARAM lParam)
 {
+	int a=0;
 	switch (msg)
 	{
 	case WM_CREATE:
@@ -188,6 +189,21 @@ LRESULT CALLBACK WndProc(HWND hWnd, UINT msg, WPARAM wParam, LPARAM lParam)
 	case WM_DESTROY:
 		PostQuitMessage(0);  //プログラム終了
 		return 0;
+
+	case WM_COMMAND:
+		switch (LOWORD(wParam))
+		{
+		case ID_MENU_NEW:
+			a++;
+			break;
+		case ID_MENU_OPEN:
+			a++;
+			break;
+		case ID_MENU_SAVE:
+			((Stage*)pRootJob->FindObject("Stage"))->Save();
+			return 0;
+		}
+
 	}
 	return DefWindowProc(hWnd, msg, wParam, lParam);
 }

@@ -93,6 +93,24 @@ BEGIN
     0
 END
 
+
+/////////////////////////////////////////////////////////////////////////////
+//
+// Menu
+//
+
+IDR_MENU1 MENU
+BEGIN
+    POPUP "ファイル"
+    BEGIN
+        MENUITEM "新規作成",                        ID_MENU_NEW
+        MENUITEM "開く",                          ID_MENU_OPEN
+        MENUITEM "保存",                          ID_MENU_SAVE
+    END
+    MENUITEM "編集",                          0
+    MENUITEM "ヘルプ",                         0
+END
+
 #endif    // 日本語 (日本) resources
 /////////////////////////////////////////////////////////////////////////////
 
